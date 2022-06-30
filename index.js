@@ -85,38 +85,6 @@ async function run() {
             res.send(result);
         })
 
-        // // post Single product
-        // app.post('/product', async (req, res) => {
-        //     const newProduct = req.body;
-        //     const query = { name: newProduct.name }
-        //     console.log(query)
-        //     const exists = await productCollection.findOne(query);
-        //     if (exists) {
-        //         return res.send({ success: false, product: exists })
-        //     }
-        //     const result = await productCollection.insertOne(newProduct);
-        //     res.send({ success: true, result });
-        // });
-
-
-
-
-
-        // // get single email order
-        // app.get('/order/:email', verifyJWT, async (req, res) => {
-        //     const email = req.params.email;
-        //     const decodedEmail = req.decoded.email;
-        //     if (email === decodedEmail) {
-        //         const query = { email: email }
-        //         const result = await orderCollection.find(query).toArray();
-        //         return res.send(result);
-        //     }
-        //     else {
-        //         return res.status(403).send({ message: 'forbidden access' });
-        //     }
-
-        // })
-
 
 
 
