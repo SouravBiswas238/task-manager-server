@@ -56,27 +56,34 @@ async function run() {
             tasks = await cursor.toArray();
             res.send(tasks);
         });
+        // delete Single product
+        app.delete('/tasks/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await taskCollection.deleteOne(query);
+            res.send(result);
+        });
 
-        // // get single email
-        // app.get('/user/:email', async (req, res) => {
-        //     const email = req.params.email;
-        //     const query = { email: email };
-        //     const user = await userCollection.findOne(query);
-        //     res.send(user);
-        // })
+        // get single email
+        app.get('/tasks/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await taskCollection.findOne(query);
+            res.send(result);
+        })
 
-        // // put single email information in database
-        // app.put('/user/:email', async (req, res) => {
-        //     const email = req.params.email;
-        //     const user = req.body;
-        //     const filter = { email: email };
-        //     const options = { upsert: true };
-        //     const updateDoc = {
-        //         $set: user,
-        //     };
-        //     const result = await userCollection.updateOne(filter, updateDoc, options);
-        //     res.send(result);
-        // })
+        // put single email information in database
+        app.put('/tasks/:id', async (req, res) => {
+            const id = req.params.id;
+            const editedTask = req.body;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: editedTask,
+            };
+            const result = await taskCollection.updateOne(filter, updateDoc, options);
+            res.send(result);
+        })
 
         // // post Single product
         // app.post('/product', async (req, res) => {
@@ -91,13 +98,7 @@ async function run() {
         //     res.send({ success: true, result });
         // });
 
-        // // delete Single product
-        // app.delete('/product/:id', async (req, res) => {
-        //     const id = req.params.id;
-        //     const query = { _id: ObjectId(id) };
-        //     const result = await productCollection.deleteOne(query);
-        //     res.send(result);
-        // });
+
 
 
 
