@@ -38,13 +38,12 @@ async function run() {
     try {
         await client.connect();
         const taskCollection = client.db("task-manager").collection("tasks");
+        const taskCompleted = client.db("task-manager").collection("completed");
 
         // post user information
         app.post('/task', async (req, res) => {
             const newTask = req.body;
-
             // const token = jwt.sign({ email: newUser.email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '5h' });
-
             const result = await taskCollection.insertOne(newTask);
             res.send({ success: true, result });
         });
@@ -56,15 +55,7 @@ async function run() {
             tasks = await cursor.toArray();
             res.send(tasks);
         });
-        // delete Single product
-        app.delete('/tasks/:id', async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: ObjectId(id) };
-            const result = await taskCollection.deleteOne(query);
-            res.send(result);
-        });
-
-        // get single email
+        // get single task
         app.get('/tasks/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
@@ -72,7 +63,7 @@ async function run() {
             res.send(result);
         })
 
-        // put single email information in database
+        // put single task information in database
         app.put('/tasks/:id', async (req, res) => {
             const id = req.params.id;
             const editedTask = req.body;
@@ -84,6 +75,48 @@ async function run() {
             const result = await taskCollection.updateOne(filter, updateDoc, options);
             res.send(result);
         })
+        // delete Single task
+        app.delete('/tasks/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await taskCollection.deleteOne(query);
+            res.send(result);
+        });
+        //for complete  delete Single task
+        app.delete('/tasks-complete/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+
+            const cursor = taskCollection.find(query);
+            comp = await cursor.toArray();
+            const completed = await taskCompleted.insertOne(comp[0]);
+
+            const result = await taskCollection.deleteOne(query);
+            res.send(result);
+        });
+
+        // get completed  product
+        app.get('/tasks-complete', async (req, res) => {
+            const query = {};
+            const cursor = taskCompleted.find(query);
+            complete = await cursor.toArray();
+            res.send(complete);
+        });
+
+        // delete single product
+        // app.delete('/tasks-complete/:id', async (req, res) => {
+        //     const id = req.params.id;
+        //     const query = { _id: ObjectId(id) };
+
+        //     const cursor = taskCollection.find(query);
+        //     complete = await cursor.toArray();
+        //     const completed = await taskCompleted.insertOne(complete[0]);
+
+        //     const result = await taskCollection.deleteOne(query);
+        //     res.send(result);
+        // });
+
+
 
 
 
